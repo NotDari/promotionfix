@@ -185,6 +185,14 @@
     font-weight: 700; font-size: 16px;
   }
   .add-btn:active { background: var(--brand-dark); }
+  .add-btn:disabled { background: #c4c4c4; color: #fff; cursor: not-allowed; }
+  .sold-out {
+    display: inline-block; margin-top: 4px; padding: 2px 8px;
+    border-radius: 10px;
+    background: #fde8ea; color: var(--search-red);
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+  }
+  .product.is-sold-out .product-img { opacity: .45; }
   .stepper {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--brand); color: #fff; font-weight: 700;
@@ -431,13 +439,13 @@
 <script>
   // ---------- Product data ----------
   const products = [
-    { id: 9, img: 'very-lazy-garlic.svg', name: 'Very Lazy Chopped Garlic 200G',         price: 1.95, unit: '£9.75/kg',   aisle: 11 },
+    { id: 9, img: 'very-lazy-garlic.png', name: 'Very Lazy Chopped Garlic 200G',         price: 1.95, unit: '£9.75/kg',   aisle: 11 },
     { id: 1, emoji: '🥣', name: 'Tesco Golden Honey Oat Granola 500G',  price: 2.10, unit: '£4.20/kg',   aisle: 7 },
     { id: 2, emoji: '🍯', name: 'Rowse Squeezy Clear Honey 340G',        price: 3.25, unit: '£9.56/kg',   aisle: 8 },
     { id: 3, emoji: '🥜', name: 'Whole Earth Smooth Peanut Butter 340G', price: 2.95, unit: '£8.68/kg',   aisle: 8 },
     { id: 4, emoji: '🍓', name: 'Bonne Maman Strawberry Conserve 370G',  price: 2.80, unit: '£7.57/kg',   aisle: 8 },
     { id: 5, emoji: '🌾', name: 'Quaker Oat So Simple Golden Syrup 10 x 36G', price: 3.50, unit: '£9.73/kg', aisle: 7 },
-    { id: 6, emoji: '🍫', name: 'Nutella Hazelnut Chocolate Spread 350G', price: 3.15, unit: '£9.00/kg',  aisle: 8 },
+    { id: 6, emoji: '🍫', name: 'Nutella Hazelnut Chocolate Spread 350G', price: 3.15, unit: '£9.00/kg',  aisle: 8, soldOut: true },
     { id: 7, emoji: '🥞', name: 'Tesco Scotch Pancakes 6 Pack',          price: 1.10, unit: '£0.18 each', aisle: 2 },
     { id: 8, emoji: '🧇', name: 'Tesco Sweet Belgian Waffles 8 Pack',    price: 1.60, unit: '£0.20 each', aisle: 2 },
   ];
@@ -509,11 +517,13 @@
              <span>${qty}</span>
              <button data-inc="${p.id}" aria-label="Add one">+</button>
            </div>`
-        : `<button class="add-btn" data-inc="${p.id}">Add</button>`;
+        : p.soldOut
+          ? `<button class="add-btn" disabled>Check</button>`
+          : `<button class="add-btn" data-inc="${p.id}">Check</button>`;
       return `
-        <article class="product">
+        <article class="product${p.soldOut ? ' is-sold-out' : ''}">
           <div class="product-img">${thumb(p)}</div>
-          <div class="product-name">${p.name}</div>
+          <div class="product-name">${p.name}${p.soldOut ? '<br><span class="sold-out">Sold out</span>' : ''}</div>
           <button class="fav${favourites.has(p.id) ? ' on' : ''}" data-fav="${p.id}" aria-label="Favourite">${heart}</button>
           <div class="buy-row">
             <div>
